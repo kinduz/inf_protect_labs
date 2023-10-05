@@ -1,0 +1,19 @@
+.input__container {
+    text-align: start;
+    display: flex;
+    flex-direction: column;
+    border-radius: 25px;
+    transition: .3s all;
+    border: 1px solid #CDCDCD;
+    &:hover {
+        border: 1px solid #a39f9f;
+    }
+}
+
+.input {
+    font-size: 18px;
+    padding: 12px 12px;
+    border-radius: 25px;
+    width: 95%;
+    height: 100%;
+}

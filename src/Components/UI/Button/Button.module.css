@@ -1,0 +1,17 @@
+.MyButton {
+    font-size: 18px;
+    font-weight: 500;
+    padding: 12px 12px;
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    column-gap: 16px;
+    align-items: center;
+
+    border: 1px solid #c4b9b9bb;
+    transition: .3s all;
+    &:hover {
+        transform: scale(0.95);
+    }
+}

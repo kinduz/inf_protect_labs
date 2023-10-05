@@ -1,0 +1,2 @@
+1 ADMIN 0 1 admin
+0 egor 0 0 egor

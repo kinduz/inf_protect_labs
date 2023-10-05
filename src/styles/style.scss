@@ -1,0 +1,176 @@
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}
+html{height:100%}
+body{line-height:1}
+ol,ul{list-style:none}
+blockquote,q{quotes:none}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}
+table{border-collapse:collapse;border-spacing:0}
+
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+
+$padding-form: 32px 48px;
+
+
+@mixin title-param {
+    font-size: 32px;
+    color: #000;
+    text-align: center;
+}
+
+@mixin errorMsg-param {
+    font-size: 16px;
+    color: rgb(235, 24, 24);
+    text-align: center;
+}
+
+@mixin boxShadow_borderRadius {
+    box-shadow: 0px 0px 13px 10px rgba(34, 60, 80, 0.13);
+    border-radius: 25px;
+}
+
+input, button, a{
+    all: unset;
+}
+
+html {
+  font-family: 'Ubuntu';
+}
+
+.d-flex {
+    display: flex;
+}
+
+.column {
+    flex-direction: column;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.center {
+    justify-content: center;
+    align-items: center;
+}
+
+.error__msg {
+    @include errorMsg-param();
+}
+
+.auth__form {
+    height: 100vh;
+}
+
+.auth__content {
+    row-gap: 16px;
+    @include boxShadow_borderRadius();
+    padding: $padding-form;
+    h1 {
+        @include title-param();
+    }
+    .form__inputs {
+        row-gap: 8px;
+    }
+    button {
+        font-size: 20px;
+    }
+}
+
+.sections {
+    margin-top: 16px;
+    column-gap: 128px;
+}
+
+.section {
+    cursor: pointer;
+    transition: .3s all;
+    @include boxShadow_borderRadius;
+    font-size: 20px;
+    padding: 12px 16px;
+}
+
+.section__users, .section__about {
+    position: relative;
+    border-radius: 25px;
+}
+
+.section__list {
+    color: rgb(63, 62, 62);
+    @include boxShadow_borderRadius();
+    padding: 8px;
+    row-gap: 6px;
+    position: absolute;
+    font-size: 16px;
+    font-weight: 500;
+    top: 46px;
+    left: 0;
+    
+}
+
+.under__section {
+    transition: .3s all;
+    &:hover {
+        color: #000;
+    }
+}
+
+.content {
+    gap: 32px;
+}
+
+.exit {
+    padding-top: 4px;
+    border-top: 1px solid rgb(63, 62, 62);
+}
+
+.section__content {
+    height: 80.2vh;
+}
+
+.about {
+    gap: 64px;
+    text-align: center;
+    h2 {
+        width: 1200px;
+        font-size: 32px;
+    }
+    h3 {
+        font-size: 20px;
+    }
+}
+
+.reset__password {
+    gap: 24px;
+    h1 {
+        font-size: 32px;
+        font-weight: 700;
+    }
+    h2 {
+        color: rgb(192, 2, 2);
+    }
+    form {
+        gap: 16px;
+        input {
+        }
+    }
+}
+
+.list__block {
+    gap: 16px;
+    h1 {
+        font-size: 32px;
+        font-weight: 700;
+    }
+}
+
+.current__user {
+    box-shadow: 4px 5px 24px -9px rgba(34, 60, 80, 0.34);
+    cursor: pointer;
+    border: 1px solid #5a58581c;
+    font-size: 20px;
+    padding: 16px;
+    .current__user-login {
+        width: 160px;
+    }
+}

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import MyInput from "../UI/Input/MyInput"
 import MyButton from "../UI/Button/MyButton"
 import { useDispatch, useSelector } from "react-redux"
-import { addAllUsers } from "../../store/Reducers/authReducer"
+import { addNewUsersAction } from "../../store/Reducers/authReducer"
 import axios from "axios"
 
 const AddUser = () => {
@@ -27,7 +27,7 @@ const AddUser = () => {
     setMsg("Пользователь успешно добавлен")
     const newUsersArray = [...usersAll, {role: '0', login: newUser, isBlock: '0', isIndividual: '0'}]
     setUsersAll(newUsersArray)
-    dispatch(addAllUsers(newUsersArray))
+    dispatch(addNewUsersAction(newUsersArray))
 
     const formattedData = newUsersArray.map(user => `${user.role} ${user.login} ${user.isBlock} ${user.isIndividual} ${!user.password ? ' ' : user.password}`).join('\n');
     axios.post('/rewrite_file', {users: formattedData});
@@ -38,7 +38,7 @@ const AddUser = () => {
       <h1>Добавление нового пользователя</h1>
       {msg && <h2 style={{color: msg === 'Пользователь успешно добавлен' && 'green'}}>{msg}</h2>}
       <form className='d-flex center column' onSubmit={(e) => handleSubmit(e)}>
-        <MyInput changeFunc={(value) => setNewUser(value)} label='Введите имя' required={true} type='text' value={newUser}/>
+        <MyInput fontSize='20px' changeFunc={(value) => setNewUser(value)} label='Введите имя' required={true} type='text' value={newUser}/>
         <MyButton backColor='red' text='Добавить' textColor='#FFF'/>
       </form>
     </div>

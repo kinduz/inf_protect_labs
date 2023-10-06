@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import MyInput from '../Components/UI/Input/MyInput'
 import MyButton from '../Components/UI/Button/MyButton'
 import { useDispatch } from 'react-redux'
-import { addAllUsers, loginAction } from '../store/Reducers/authReducer'
+import { addNewUsersAction, loginAction } from '../store/Reducers/authReducer'
 import axios from 'axios'
 
 
@@ -15,7 +15,10 @@ const LoginForm = () => {
   const [isUserHasPassword, setIsUserHasPassword] = useState(null)
   const [loginValue, setLoginValue] = useState('')
   const [passwordValue, setPasswordValue] = useState('')
+  const [makePassword, setMakePassword] = useState('')
+  const [confirmMakePassword, setConfirmMakePassword] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
+  const [isBlockUser, setIsBlockUser] = useState(false)
 
 
   useEffect(() => {
@@ -30,7 +33,7 @@ const LoginForm = () => {
   useEffect(() => {
     if (usersList) {
       console.log(usersList);
-      dispatch(addAllUsers(usersList))
+      dispatch(addNewUsersAction(usersList))
     }
   }, [usersList])
 
@@ -39,6 +42,10 @@ const LoginForm = () => {
     e.preventDefault()
     if (stepAuth === 1) {
       const isUser = usersList.find(user => user.login === loginValue)
+      if (isUser && isUser.isBlock === '1') {
+        setIsBlockUser(true)
+        return
+      }
       if (isUser) {
         setIsUserHasPassword(isUser.password)
         setErrorMsg('')
@@ -49,32 +56,99 @@ const LoginForm = () => {
       }
       return
     }
-    const foundedUser = usersList.find(user => user.login === loginValue && isUserHasPassword === passwordValue)
-    if (foundedUser) {
-      setErrorMsg('');
-      dispatch(loginAction(foundedUser.role, foundedUser.login, foundedUser.isBlock, foundedUser.isIndividual, foundedUser.password))
+    if (isUserHasPassword) {
+      const foundedUser = usersList.find(user => user.login === loginValue && isUserHasPassword === passwordValue)
+      if (foundedUser) {
+        setErrorMsg('');
+        dispatch(loginAction(foundedUser.role, foundedUser.login, foundedUser.isBlock, foundedUser.isIndividual, foundedUser.password))
+      }
+      else {
+        setErrorMsg('Неправильный пароль, повторите попытку');
+      }
     }
     else {
-      setErrorMsg('Неправильный пароль, повторите попытку');
+      const foundedUser = usersList.find(user => user.login === loginValue)
+      if (makePassword === confirmMakePassword) {
+        let userWithPassword = {...foundedUser, password: makePassword};
+        const newUsersList = usersList.map(user => {
+          if (user.login === loginValue) {
+            return {...user, password: makePassword}
+          }
+          return user
+        })
+        const formattedData = newUsersList.map(user => `${user.role} ${user.login} ${user.isBlock} ${user.isIndividual} ${user.password ? user.password : ' '}`).join('\n');
+        axios.post('/rewrite_file', {users: formattedData})
+        setUsersList(newUsersList)
+        dispatch(addNewUsersAction(newUsersList))
+        setErrorMsg('');
+        dispatch(loginAction(userWithPassword.role, userWithPassword.login, userWithPassword.isBlock, userWithPassword.isIndividual, userWithPassword.password))
+      }
+      else {
+        setErrorMsg("Введенные пароли должны совпадать")
+        return
+      }
     }
   }
 
   return (
-    <form className="auth__content d-flex column center" onSubmit={(e) => readDataFile(e)}>
-      <h1>Авторизация</h1>
-      <div className="form__inputs d-flex column" >
-        {stepAuth === 1 ?
-          <MyInput fontSize='20px' changeFunc={(value) => setLoginValue(value)} value={loginValue} label='Введите логин' required={true} type='text'/>
-        :
-          <MyInput fontSize='20px' changeFunc={(value) => setPasswordValue(value)} value={passwordValue} label={isUserHasPassword ? 'Введите пароль' : 'Создайте пароль'} required={true} type='password'/>
-        }
-      </div>
-      <MyButton  text={stepAuth === 1 ? 'Далее' : 'Авторизоваться'} />
-      {errorMsg && 
-        <span className='error__msg'>{errorMsg}</span>
-      }
-    </form>
-  )
+    <>
+      {isBlockUser ? (
+        <div className="user__block d-flex center column">
+          Ваш аккаунт не имеет доступа к системе
+          <MyButton clickFunction={() => {setLoginValue(''); setErrorMsg(''); setIsBlockUser(false)}} backColor='black' textColor='#FFF' text='Вернуться к авторизации'/>
+        </div>
+      ) : (
+        <form
+          className="auth__content d-flex column center"
+          onSubmit={(e) => readDataFile(e)}
+        >
+          <h1>Авторизация</h1>
+          <div className="form__inputs d-flex column">
+            {stepAuth === 1 ? (
+              <MyInput
+                fontSize="20px"
+                changeFunc={(value) => setLoginValue(value)}
+                value={loginValue}
+                label="Введите логин"
+                required={true}
+                type="text"
+              />
+            ) : isUserHasPassword ? (
+              <MyInput
+                fontSize="20px"
+                changeFunc={(value) => setPasswordValue(value)}
+                value={passwordValue}
+                label="Введите пароль"
+                required={true}
+                type="password"
+              />
+            ) : (
+              <div className="make__password d-flex column center">
+                <MyInput
+                  fontSize="20px"
+                  changeFunc={(value) => setMakePassword(value)}
+                  value={makePassword}
+                  label="Создайте пароль"
+                  required={true}
+                  type="password"
+                />
+                <MyInput
+                  fontSize="20px"
+                  changeFunc={(value) => setConfirmMakePassword(value)}
+                  value={confirmMakePassword}
+                  label="Подтвердите пароль"
+                  required={true}
+                  type="password"
+                />
+              </div>
+            )}
+          </div>
+          <MyButton text={stepAuth === 1 ? "Далее" : "Авторизоваться"} />
+          {errorMsg && <span className="error__msg">{errorMsg}</span>}
+        </form>
+      )}
+    </>
+  );
 }
 
 export default LoginForm

@@ -15,6 +15,11 @@ const Sections = () => {
   useHandleClick(isActiveSectionFirst, setIsActiveSectionFirst);
   useHandleClick(isActiveSectionSecond, setIsActiveSectionSecond);
 
+  const logoutFunc = () => {
+    dispatch(logoutAction())
+    window.location.reload()
+  }
+
   return (
     <div className="sections d-flex center">
       <div
@@ -34,7 +39,7 @@ const Sections = () => {
               : userSections.map((underSection) => (
                   <Link className="under__section" to={`/section/${underSection.to}`}>{underSection.label}</Link>
                 ))}
-            <div className="under__section exit" onClick={() => dispatch(logoutAction())}>Выйти</div>
+            <div className="under__section exit" onClick={() => logoutFunc() }>Выйти</div>
           </div>
         )}
       </div>

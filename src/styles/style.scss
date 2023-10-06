@@ -29,7 +29,7 @@ $padding-form: 32px 48px;
     border-radius: 25px;
 }
 
-input, button, a{
+input:not([type="checkbox"]), button, a{
     all: unset;
 }
 
@@ -54,6 +54,11 @@ html {
     align-items: center;
 }
 
+.user__block {
+    gap: 16px;
+    font-size: 32px;
+}
+
 .error__msg {
     @include errorMsg-param();
 }
@@ -71,6 +76,9 @@ html {
     }
     .form__inputs {
         row-gap: 8px;
+        .make__password {
+            gap: 8px;
+        }
     }
     button {
         font-size: 20px;
@@ -96,6 +104,7 @@ html {
 }
 
 .section__list {
+    background: #FFF;
     color: rgb(63, 62, 62);
     @include boxShadow_borderRadius();
     padding: 8px;
@@ -105,7 +114,7 @@ html {
     font-weight: 500;
     top: 46px;
     left: 0;
-    
+    z-index: 1;
 }
 
 .under__section {
@@ -172,5 +181,21 @@ html {
     padding: 16px;
     .current__user-login {
         width: 160px;
+        font-size: 24px;
+        font-weight: 500;
+    }
+    .current__user-limits {
+        gap: 32px;
+    }
+}
+
+.checkbox-input {
+    transform: scale(1.5);
+}
+
+.input__box-access {
+    gap: 12px;
+    span {
+        font-size: 18px;
     }
 }

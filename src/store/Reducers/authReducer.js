@@ -12,6 +12,7 @@ const LOGIN = "LOGIN";
 const ADD_USERS = "ADD_USERS";
 const CHANGE_USER_PASS = "CHANGE_USER_PASS";
 const LOGOUT = "LOGOUT";
+const SET_NEW_LIMITS = 'SET_NEW_LIMITS';
 
 export const authReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -50,6 +51,17 @@ export const authReducer = (state = initialState, action) => {
         isBlock: state.isBlock,
         isIndividual: state.isIndividual
       };
+    case SET_NEW_LIMITS:
+      return {
+        ...state,
+        isAuth: true,
+        userRole: state.userRole,
+        userLogin: state.userLogin,
+        userPassword: state.userPassword,
+        users: state.users,
+        isBlock: action.payload.isBlock,
+        isIndividual: action.payload.isIndividual
+      }
     default:
       return state;
   }
@@ -60,12 +72,17 @@ export const loginAction = (role, login, isBlock, isIndividual, password) => {
   return { type: LOGIN, payload: data };
 };
 
-export const addAllUsers = (users) => {
+export const addNewUsersAction = (users) => {
   return { type: ADD_USERS, payload: users };
 };
 
 export const setNewPasswordAction = (password) => {
     return {type: CHANGE_USER_PASS, payload: password}
+}
+
+export const setNewLimitsAction = (isBlock, isIndividual) => {
+  const data = { isBlock, isIndividual };
+  return {type: SET_NEW_LIMITS, payload: data}
 }
 
 export const logoutAction = () => {

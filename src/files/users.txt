@@ -1,3 +1,0 @@
-1 ADMIN 0 1 test
-0 kinduz 0 0 kinduz
-0 vlad 1 0  

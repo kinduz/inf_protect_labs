@@ -18,6 +18,8 @@ const AppRouter = () => {
             key={route.path}
           />
         ))}
+        <Route path="/*" element={<Navigate to="/section/about" />} />
+
       </Routes>
     </div>
   ) : (

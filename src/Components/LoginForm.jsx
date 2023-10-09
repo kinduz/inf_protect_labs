@@ -69,6 +69,10 @@ const LoginForm = () => {
     else {
       const foundedUser = usersList.find(user => user.login === loginValue)
       if (makePassword === confirmMakePassword) {
+        if (makePassword === foundedUser.login && foundedUser.isIndividual === '1') {
+          setErrorMsg("Пароль данного аккаунта не может иметь значение логина пользователя")
+          return
+        }
         let userWithPassword = {...foundedUser, password: makePassword};
         const newUsersList = usersList.map(user => {
           if (user.login === loginValue) {

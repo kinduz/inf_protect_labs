@@ -19,20 +19,24 @@ const LoginForm = () => {
   const [confirmMakePassword, setConfirmMakePassword] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
   const [isBlockUser, setIsBlockUser] = useState(false)
+  const [cryptPassword, setCryptPassword] = useState('')
+  const passwordPhrase = localStorage.getItem('passwordPhrase')
 
-
-  useEffect(() => {
-    axios.get('/get_users').then(response => {
+  const getUsers = () => {
+    axios.get('/get_users', {
+      params: {
+        password: cryptPassword,
+      }
+    }).then(response => {
       setUsersList(response.data)
     })
     .catch(e => {
       console.log(e);
     })
-  }, []);
+  }
 
   useEffect(() => {
     if (usersList) {
-      console.log(usersList);
       dispatch(addNewUsersAction(usersList))
     }
   }, [usersList])
@@ -40,7 +44,23 @@ const LoginForm = () => {
 
   const readDataFile = (e) => {
     e.preventDefault()
+
     if (stepAuth === 1) {
+      if (!passwordPhrase) {
+        localStorage.setItem("passwordPhrase", cryptPassword)
+      }
+      if (passwordPhrase && passwordPhrase !== cryptPassword) {
+        setErrorMsg("Введите правильную парольную фразу");
+        return
+      }
+      axios.get("/make_file")
+      getUsers()
+      setErrorMsg('')
+      setStepAuth(2)
+      return
+    }
+
+    if (stepAuth === 2) {
       const isUser = usersList.find(user => user.login === loginValue)
       if (isUser && isUser.isBlock === '1') {
         setIsBlockUser(true)
@@ -49,14 +69,14 @@ const LoginForm = () => {
       if (isUser) {
         setIsUserHasPassword(isUser.password)
         setErrorMsg('')
-        setStepAuth(2)
+        setStepAuth(3)
       }
       else {
         setErrorMsg("Пользователя с таким логином не существует")
       }
       return
     }
-    if (isUserHasPassword) {
+    if (stepAuth === 3 && isUserHasPassword) {
       const foundedUser = usersList.find(user => user.login === loginValue && isUserHasPassword === passwordValue)
       if (foundedUser) {
         setErrorMsg('');
@@ -108,7 +128,17 @@ const LoginForm = () => {
         >
           <h1>Авторизация</h1>
           <div className="form__inputs d-flex column">
-            {stepAuth === 1 ? (
+          {stepAuth === 1 && (
+              <MyInput
+                fontSize="20px"
+                changeFunc={(value) => setCryptPassword(value)}
+                value={cryptPassword}
+                label="Введите парольную фразу"
+                required={true}
+                type="password"
+              />
+            )} 
+            {stepAuth === 2 && (
               <MyInput
                 fontSize="20px"
                 changeFunc={(value) => setLoginValue(value)}
@@ -117,7 +147,10 @@ const LoginForm = () => {
                 required={true}
                 type="text"
               />
-            ) : isUserHasPassword ? (
+            )} 
+
+            {stepAuth === 3 && (
+            isUserHasPassword ? (
               <MyInput
                 fontSize="20px"
                 changeFunc={(value) => setPasswordValue(value)}
@@ -145,7 +178,7 @@ const LoginForm = () => {
                   type="password"
                 />
               </div>
-            )}
+            ))}
           </div>
           <MyButton text={stepAuth === 1 ? "Далее" : "Авторизоваться"} />
           {errorMsg && <span className="error__msg">{errorMsg}</span>}

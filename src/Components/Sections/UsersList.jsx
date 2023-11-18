@@ -4,6 +4,7 @@ import UserList from '../UI/UserList/UserList'
 const UsersList = () => {
 
   const {users} = useSelector(state => state.auth)
+  console.log(users);
 
   return (
     <div className="list__block d-flex column center">

@@ -12,18 +12,19 @@ const ResetPassword = () => {
 
   const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
+  const [confirmNewPassword, setConfirmNewPassword] = useState('')
   const [submitMsg, setSubmitMsg] = useState('')
   const [usersAll, setUsersAll] = useState(users)
-
-  useEffect(() => {
-    console.log(usersAll);
-  }, [usersAll])
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (oldPassword !== userPassword) {
       setSubmitMsg("Текущий пароль не совпадает с указанным")
       return;
+    }
+    if (confirmNewPassword !== newPassword) {
+      setSubmitMsg("Новые пароли не совпадают")
+      return
     }
     console.log(isIndividual);
     if (newPassword === userLogin && isIndividual !== '0') {
@@ -55,6 +56,7 @@ const ResetPassword = () => {
       <form className='d-flex center column' onSubmit={(e) => handleSubmit(e)}>
         <MyInput fontSize='20px' changeFunc={(value) => setOldPassword(value)} value={oldPassword} label='Введите текущий пароль' type='password' required={true}/>
         <MyInput fontSize='20px' changeFunc={(value) => setNewPassword(value)} value={newPassword} label='Введите новый пароль' type='password' required={true}/>
+        <MyInput fontSize='20px' changeFunc={(value) => setConfirmNewPassword(value)} value={confirmNewPassword} label='Подтвердите новый пароль' type='password' required={true}/>
         <MyButton backColor='red' textColor='#FFF' text='Сменить пароль' clickFunction={(e) => handleSubmit(e)}/>
       </form>
     </div>
